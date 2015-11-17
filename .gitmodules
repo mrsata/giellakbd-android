@@ -1,0 +1,3 @@
+[submodule "jni/corevoikko"]
+	path = jni/corevoikko
+	url = https://github.com/voikko/corevoikko

@@ -92,6 +92,9 @@ import com.android.inputmethod.latin.utils.StatsUtils;
 import com.android.inputmethod.latin.utils.StatsUtilsManager;
 import com.android.inputmethod.latin.utils.SubtypeLocaleUtils;
 import com.android.inputmethod.latin.utils.ViewLayoutUtils;
+import com.android.inputmethod.latin.utils.VoikkoUtils;
+
+import org.puimula.libvoikko.Voikko;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -536,6 +539,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
 
     public LatinIME() {
         super();
+
         mSettings = Settings.getInstance();
         mKeyboardSwitcher = KeyboardSwitcher.getInstance();
         mStatsUtilsManager = StatsUtilsManager.getInstance();
@@ -547,6 +551,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     @Override
     public void onCreate() {
         Settings.init(this);
+        VoikkoUtils.init(this);
         DebugFlags.init(PreferenceManager.getDefaultSharedPreferences(this));
         RichInputMethodManager.init(this);
         mRichImm = RichInputMethodManager.getInstance();
