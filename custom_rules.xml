@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="sami_keyboard">
-    <target name="-package-resources" depends="-crunch">
+<target name="-get-cores">
+    <property environment="env"/>
+    <!-- support for Windows -->
+    <condition property="cores.count" value="${env.NUMBER_OF_PROCESSORS}">
+        <os family="windows" />
+    </condition>
+    <!-- support for Linux and Solaris (package SUNWgnu-coreutils is required) -->
+    <exec executable="nproc" outputproperty="cores.count" os="Linux,SunOS,Solaris">
+        <arg value="--all"/>
+    </exec>
+    <!-- support for Mac OS X -->
+    <exec executable="sysctl" outputproperty="cores.count" os="Mac OS X">
+        <arg value="-n"/>
+        <arg value="hw.ncpu"/>
+    </exec>
+</target>
+
+<target name="-pre-build" depends="-get-cores">
+	<exec executable="${ndk.dir}/ndk-build" failonerror="true">
+		<arg value="-j${cores.count}"/>
+	</exec>
+</target>
+
+<target name="clean" depends="android_rules.clean">
+	<exec executable="${ndk.dir}/ndk-build" failonerror="true">
+		<arg value="clean"/>
+	</exec>
+</target>
+<target name="-package-resources" depends="-crunch">
         <!-- only package resources if *not* a library project -->
         <do-only-if-not-library elseText="Library project: do not package resources..." >
             <aapt executable="${aapt}"

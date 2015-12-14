@@ -104,6 +104,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
+import so.brendan.hfstospell.HfstUtils;
+
 /**
  * Input method implementation for Qwerty'ish keyboard.
  */
@@ -534,6 +536,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
     // JNI call as much as possible.
     static {
         JniUtils.loadNativeLibrary();
+        HfstUtils.loadNativeLibrary();
     }
 
     public LatinIME() {
@@ -548,6 +551,7 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
 
     @Override
     public void onCreate() {
+        HfstUtils.init(this);
         Settings.init(this);
         DebugFlags.init(PreferenceManager.getDefaultSharedPreferences(this));
         RichInputMethodManager.init(this);
