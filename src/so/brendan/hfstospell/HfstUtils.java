@@ -58,6 +58,15 @@ final public class HfstUtils {
         return f;
     }
 
+    public static boolean spellerExists(String language) {
+        try {
+            mCtx.getAssets().open("dicts/" + language + ".zhfst").close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private static ZHfstOspeller configure(ZHfstOspeller s) {
         s.setQueueLimit(3);
         s.setWeightLimit(50);

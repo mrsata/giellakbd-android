@@ -20,6 +20,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,6 +30,7 @@ import java.util.Locale;
  * Class to keep long-term log. This is inactive in production, and is only for debug purposes.
  */
 public class PrivateLog {
+    private static final String TAG = "PrivateLog";
 
     public static final boolean DEBUG = DictionaryProvider.DEBUG;
 
@@ -95,6 +97,7 @@ public class PrivateLog {
     }
 
     public static void log(String event) {
+        Log.d(TAG, event);
         if (!DEBUG) return;
         final SQLiteDatabase l = sDebugHelper.getWritableDatabase();
         DebugHelper.insert(l, event);
