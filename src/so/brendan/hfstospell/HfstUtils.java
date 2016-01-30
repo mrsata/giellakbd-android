@@ -35,7 +35,7 @@ final public class HfstUtils {
 
     public static void init(Context ctx) {
         mCtx = ctx;
-        test();
+        //test();
     }
 
     private static void test() {
