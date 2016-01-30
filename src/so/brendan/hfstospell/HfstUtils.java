@@ -52,7 +52,7 @@ final public class HfstUtils {
     }
 
     private static File getSpellerCache() {
-        return new File(mCtx.getCacheDir(), "spellers");
+        return new File(mCtx.getFilesDir(), "spellers");
     }
 
     private static File extractSpellerFromAssets(String language) throws IOException {
@@ -87,7 +87,6 @@ final public class HfstUtils {
         File spellerDir = new File(getSpellerCache(), language);
 
         // If pre-cached, reuse.
-        /*
         if (spellerDir.isDirectory()) {
             File acceptor = new File(spellerDir, ACCEPTOR);
             File errmodel = new File(spellerDir, ERRMODEL);
@@ -98,7 +97,6 @@ final public class HfstUtils {
                                                    errmodel.getAbsolutePath()));
             }
         }
-        */
 
         // Otherwise, unzip and rock on
         zhfst = new ZHfstOspeller();
@@ -116,11 +114,16 @@ final public class HfstUtils {
         Log.d(TAG, "tmpPath: " + tmpPath);
 
         zhfstFile.delete();
-        tmpPath.renameTo(spellerDir);
+        if (!spellerDir.mkdirs() || !tmpPath.renameTo(spellerDir)) {
+            Log.e(TAG, "Temp path could not be renamed!");
+            return null;
+        }
 
         Log.i(TAG, "Newly created cached language " + language);
 
-        return configure(zhfst);
+        // Re-run to get cached version.
+        zhfst.delete();
+        return getSpeller(language);
     }
 
 }

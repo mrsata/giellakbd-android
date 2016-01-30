@@ -52,33 +52,25 @@ public final class HfstSpellCheckerService extends SpellCheckerService {
     }
 
     private class HfstSpellCheckerSession extends Session {
-        private String mLanguage;
+        private ZHfstOspeller mSpeller;
 
         @Override
         public void onCreate() {
-            mLanguage = getLocale();
+            mSpeller = HfstUtils.getSpeller(getLocale());
         }
 
         @Override
         public SuggestionsInfo onGetSuggestions(TextInfo textInfo, int suggestionsLimit) {
-            // If the speller isn't ready, return an empty list and an OK message.
-            ZHfstOspeller speller = HfstUtils.getSpeller(mLanguage);
-
-            if (speller == null) {
-                Log.w(TAG, String.format("Speller for language '%s' wasn't ready", mLanguage));
-                return new SuggestionsInfo(SuggestionsInfo.RESULT_ATTR_IN_THE_DICTIONARY, new String[0]);
-            }
-
             // If the speller IS ready, do the proper thing.
             String word = textInfo.getText();
 
             // Check if the word is spelled correctly.
-            if (speller.spell(word)) {
+            if (mSpeller.spell(word)) {
                 return new SuggestionsInfo(SuggestionsInfo.RESULT_ATTR_IN_THE_DICTIONARY, new String[0]);
             }
 
             // If the word isn't correct, query the C++ spell checker for suggestions.
-            StringWeightPairVector suggs = speller.suggest(word);
+            StringWeightPairVector suggs = mSpeller.suggest(word);
             String[] suggestions = new String[(int) suggs.size()];
 
             for (int i = 0; i < suggs.size(); i++) {
