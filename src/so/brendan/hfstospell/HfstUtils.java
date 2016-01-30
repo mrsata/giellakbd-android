@@ -102,7 +102,7 @@ final public class HfstUtils {
 
         // Otherwise, unzip and rock on
         zhfst = new ZHfstOspeller();
-        zhfst.setTemporaryDir(getSpellerCache().getAbsolutePath());
+        zhfst.setTemporaryDir(mCtx.getCacheDir().getAbsolutePath());
 
         File zhfstFile;
         try {
