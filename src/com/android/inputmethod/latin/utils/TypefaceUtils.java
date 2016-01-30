@@ -66,6 +66,7 @@ public final class TypefaceUtils {
         sMissingCodepoints.put(16, BitSet.valueOf(getByteBufferForPath(context, R.raw.unicode_api16)));
         sMissingCodepoints.put(19, BitSet.valueOf(getByteBufferForPath(context, R.raw.unicode_api19)));
         sMissingCodepoints.put(21, BitSet.valueOf(getByteBufferForPath(context, R.raw.unicode_api21)));
+        sMissingCodepoints.put(23, BitSet.valueOf(getByteBufferForPath(context, R.raw.unicode_api23)));
     }
 
     // This sparse array caches key label text height in pixel indexed by key label text size.
@@ -118,8 +119,12 @@ public final class TypefaceUtils {
         if (!sMissingCodepoints.containsKey(sdk)) {
             int fallback;
 
-            if (sdk > 21 || sdk == 20) {
+            if (sdk >= 23) {
+                fallback = 23;
+            } else if (sdk >= 21) {
                 fallback = 21;
+            } else if (sdk >= 19) {
+                fallback = 19;
             } else {
                 fallback = 16;
             }
