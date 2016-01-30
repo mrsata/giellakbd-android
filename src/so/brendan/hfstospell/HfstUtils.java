@@ -12,6 +12,8 @@ import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import fi.helsinki.hfst.StringWeightPair;
+import fi.helsinki.hfst.StringWeightPairVector;
 import fi.helsinki.hfst.ZHfstOspeller;
 
 final public class HfstUtils {
@@ -33,6 +35,16 @@ final public class HfstUtils {
 
     public static void init(Context ctx) {
         mCtx = ctx;
+        test();
+    }
+
+    private static void test() {
+        ZHfstOspeller speller = getSpeller("se");
+        StringWeightPairVector vec = speller.suggest("nuvviDspeller");
+
+        for (int i = 0; i < vec.size(); ++i) {
+            Log.d(TAG, String.format("%s: %s", vec.get(i).getFirst(), vec.get(i).getSecond()));
+        }
     }
 
     public static void loadNativeLibrary() {
@@ -75,6 +87,7 @@ final public class HfstUtils {
         File spellerDir = new File(getSpellerCache(), language);
 
         // If pre-cached, reuse.
+        /*
         if (spellerDir.isDirectory()) {
             File acceptor = new File(spellerDir, ACCEPTOR);
             File errmodel = new File(spellerDir, ERRMODEL);
@@ -85,9 +98,9 @@ final public class HfstUtils {
                                                    errmodel.getAbsolutePath()));
             }
         }
+        */
 
         // Otherwise, unzip and rock on
-
         zhfst = new ZHfstOspeller();
         zhfst.setTemporaryDir(getSpellerCache().getAbsolutePath());
 
@@ -100,6 +113,7 @@ final public class HfstUtils {
         }
 
         File tmpPath = new File(zhfst.readZhfst(zhfstFile.getAbsolutePath()));
+        Log.d(TAG, "tmpPath: " + tmpPath);
 
         zhfstFile.delete();
         tmpPath.renameTo(spellerDir);
