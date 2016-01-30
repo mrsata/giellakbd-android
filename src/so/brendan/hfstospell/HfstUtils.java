@@ -111,7 +111,7 @@ final public class HfstUtils {
         }
 
         File tmpPath = new File(zhfst.readZhfst(zhfstFile.getAbsolutePath()));
-        Log.d(TAG, "tmpPath: " + tmpPath);
+        Log.w(TAG, "tmpPath: " + tmpPath);
 
         zhfstFile.delete();
         if (!spellerDir.mkdirs() || !tmpPath.renameTo(spellerDir)) {
@@ -125,5 +125,4 @@ final public class HfstUtils {
         zhfst.delete();
         return getSpeller(language);
     }
-
 }
