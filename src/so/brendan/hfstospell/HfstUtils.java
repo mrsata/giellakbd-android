@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 
 import fi.helsinki.hfst.StringWeightPair;
 import fi.helsinki.hfst.StringWeightPairVector;
+import fi.helsinki.hfst.ZHfstException;
 import fi.helsinki.hfst.ZHfstOspeller;
 
 final public class HfstUtils {
@@ -112,8 +113,16 @@ final public class HfstUtils {
             return null;
         }
 
-        File tmpPath = new File(zhfst.readZhfst(zhfstFile.getAbsolutePath()));
-        Log.d(TAG, "tmpPath: " + tmpPath);
+        File tmpPath;
+
+        try {
+            tmpPath = new File(zhfst.readZhfst(zhfstFile.getAbsolutePath()));
+            Log.d(TAG, "tmpPath: " + tmpPath);
+        } catch (ZHfstException e) {
+            Log.e(TAG, e.what());
+            zhfst.delete();
+            return null;
+        }
 
         zhfstFile.delete();
         tmpPath.renameTo(spellerDir);
