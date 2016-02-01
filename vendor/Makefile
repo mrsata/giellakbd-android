@@ -1,7 +1,7 @@
 LIBS=xz/configure libarchive/configure hfst-ospell/configure
 
 all: $(LIBS)
-	abuild -o ../libs abuild.json
+	abuild -o ../libs
 	cp hfst-ospell/libhfstospell.jar ../libs
 
 xz/configure:
