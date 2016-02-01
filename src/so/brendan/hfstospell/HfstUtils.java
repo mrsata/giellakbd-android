@@ -7,6 +7,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 import javax.annotation.Nonnull;
@@ -55,8 +56,13 @@ final public class HfstUtils {
         return new File(mCtx.getFilesDir(), "spellers");
     }
 
+
+    private static InputStream getZhfstFromAssets(@Nonnull String language) throws IOException {
+        return mCtx.getAssets().open("dicts/" + language + ".zhfst");
+    }
+
     private static File extractSpellerFromAssets(String language) throws IOException {
-        BufferedInputStream bis = new BufferedInputStream(mCtx.getAssets().open("dicts/" + language + ".zhfst"));
+        BufferedInputStream bis = new BufferedInputStream(getZhfstFromAssets(language));
         File f = new File(mCtx.getCacheDir() + "/" + language + ".zhfst");
 
         byte[] buffer = new byte[bis.available()];
@@ -74,6 +80,15 @@ final public class HfstUtils {
         s.setQueueLimit(3);
         s.setWeightLimit(50);
         return s;
+    }
+
+    public static boolean hasSpeller(@Nonnull Locale locale) {
+        try {
+            getZhfstFromAssets(locale.toString());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Nullable
