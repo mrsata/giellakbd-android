@@ -16,6 +16,8 @@
 
 package com.android.inputmethod.dictionarypack;
 
+import com.android.inputmethod.latin.R;
+
 /**
  * A class to group constants for dictionary pack usage.
  *

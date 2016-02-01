@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 
 import fi.helsinki.hfst.StringWeightPair;
 import fi.helsinki.hfst.StringWeightPairVector;
+import fi.helsinki.hfst.ZHfstException;
 import fi.helsinki.hfst.ZHfstOspeller;
 
 final public class HfstUtils {
@@ -97,6 +98,18 @@ final public class HfstUtils {
     }
 
     @Nullable
+    private static File readZhfst(ZHfstOspeller zhfst, File zhfstFile) throws Exception, ZHfstException {
+        try {
+            return new File(zhfst.readZhfst(zhfstFile.getAbsolutePath()));
+        } catch (Exception e) {
+            if (e instanceof ZHfstException) {
+                throw (ZHfstException)e;
+            }
+            throw e;
+        }
+    }
+
+    @Nullable
     public static ZHfstOspeller getSpeller(@Nonnull String language) {
         ZHfstOspeller zhfst;
         File spellerDir = new File(getSpellerCache(), language);
@@ -125,7 +138,16 @@ final public class HfstUtils {
             return null;
         }
 
-        File tmpPath = new File(zhfst.readZhfst(zhfstFile.getAbsolutePath()));
+
+        File tmpPath;
+
+        try {
+            tmpPath = readZhfst(zhfst, zhfstFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
         Log.w(TAG, "tmpPath: " + tmpPath);
 
         zhfstFile.delete();
