@@ -71,7 +71,7 @@ public final class HfstSpellCheckerService extends SpellCheckerService {
 
             // If the word isn't correct, query the C++ spell checker for suggestions.
             StringWeightPairVector suggs = mSpeller.suggest(word);
-            Log.i(TAG, "Suggestions: " suggs.size());
+            Log.i(TAG, "Suggestions: " + suggs.size());
             String[] suggestions = new String[(int) suggs.size()];
 
             for (int i = 0; i < suggs.size(); i++) {
