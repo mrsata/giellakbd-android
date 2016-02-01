@@ -1,5 +1,7 @@
 package so.brendan.hfstospell;
 
+import android.util.Log;
+
 import com.android.inputmethod.latin.Dictionary;
 import com.android.inputmethod.latin.NgramContext;
 import com.android.inputmethod.latin.SuggestedWords;
@@ -15,7 +17,13 @@ import fi.helsinki.hfst.StringWeightPairVector;
 import fi.helsinki.hfst.ZHfstOspeller;
 
 public class HfstDictionary extends Dictionary {
+    private static final String TAG = HfstDictionary.class.getSimpleName();
+
     private ZHfstOspeller mSpeller;
+
+    static {
+         HfstUtils.loadNativeLibrary();
+    }
 
     public HfstDictionary(String dictType, Locale locale) {
         super(dictType, locale);
@@ -38,6 +46,8 @@ public class HfstDictionary extends Dictionary {
                     (int)sugg.getSecond(), SuggestedWordInfo.KIND_CORRECTION, this,
                     SuggestedWordInfo.NOT_AN_INDEX, SuggestedWordInfo.NOT_A_CONFIDENCE));
         }
+
+        Log.i(TAG, out.toString());
 
         return out;
     }

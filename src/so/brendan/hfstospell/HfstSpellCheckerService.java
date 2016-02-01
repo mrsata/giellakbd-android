@@ -32,7 +32,6 @@ import fi.helsinki.hfst.ZHfstOspeller;
 public final class HfstSpellCheckerService extends SpellCheckerService {
     private static final String TAG = HfstSpellCheckerService.class.getSimpleName();
 
-
     public HfstSpellCheckerService() {
         super();
     }
@@ -57,6 +56,7 @@ public final class HfstSpellCheckerService extends SpellCheckerService {
         @Override
         public void onCreate() {
             mSpeller = HfstUtils.getSpeller(getLocale());
+            Log.i(TAG, "Got speller for " + getLocale().toString());
         }
 
         @Override
@@ -71,10 +71,12 @@ public final class HfstSpellCheckerService extends SpellCheckerService {
 
             // If the word isn't correct, query the C++ spell checker for suggestions.
             StringWeightPairVector suggs = mSpeller.suggest(word);
+            Log.i(TAG, "Suggestions: " suggs.size());
             String[] suggestions = new String[(int) suggs.size()];
 
             for (int i = 0; i < suggs.size(); i++) {
                 suggestions[i] = suggs.get(i).getFirst();
+                Log.i(TAG, suggestions[i]);
             }
 
             int attrs = SuggestionsInfo.RESULT_ATTR_LOOKS_LIKE_TYPO;
