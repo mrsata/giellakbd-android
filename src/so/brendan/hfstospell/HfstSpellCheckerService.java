@@ -43,10 +43,12 @@ public final class HfstSpellCheckerService extends SpellCheckerService {
     @Override
     public void onCreate() {
         HfstUtils.init(this);
+        Log.d(TAG, "Service: onCreate");
     }
 
     @Override
     public Session createSession() {
+        Log.d(TAG, "Service: createSession");
         return new HfstSpellCheckerSession();
     }
 
