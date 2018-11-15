@@ -12,4 +12,4 @@ android:
     - build-tools-28.0.3
     - android-27
 before_install:
-  - echo "ext.app = [ packageName: "org.travisci.keyboard", build: 1, version: "1.0.0" ]" > $TRAVIS_BUILD_DIR/app/local.gradle
+  - echo 'ext.app = [ packageName: "org.travisci.keyboard", build: 1, version: "1.0.0" ]' > $TRAVIS_BUILD_DIR/app/local.gradle
