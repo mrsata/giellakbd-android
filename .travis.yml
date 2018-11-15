@@ -1,7 +1,7 @@
 language: android
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
     - $HOME/.gradle/caches/
@@ -11,5 +11,4 @@ android:
   components:
     - build-tools-28.0.3
     - android-27
-before_install:
-  - echo 'ext.app = [ packageName: "org.travisci.keyboard", build: 1, version: "1.0.0" ]' > $TRAVIS_BUILD_DIR/app/local.gradle
+
