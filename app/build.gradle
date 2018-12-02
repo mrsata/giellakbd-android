@@ -13,10 +13,6 @@ play {
     serviceAccountCredentials = app.playCredentials != "" ? file(app.playCredentials) : file("/dev/null")
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def storePw = properties.getProperty('store.pw')
-def keyPw = properties.getProperty('key.pw')
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
