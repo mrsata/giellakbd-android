@@ -29,7 +29,7 @@ android {
     if (app.storeFile != "") {
         signingConfigs {
             release {
-                storeFile rootProject.file(app.storeFile)
+                storeFile app.storeFile != "" ? rootProject.file(app.storeFile) : null
                 keyAlias app.keyAlias
                 storePassword app.storePassword
                 keyPassword app.keyPassword
