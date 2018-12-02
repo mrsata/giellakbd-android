@@ -1,7 +1,17 @@
+plugins {
+    id 'com.github.triplet.play' version '2.0.0'
+}
+apply from: 'local.gradle'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply from: 'local.gradle'
+apply plugin: 'com.github.triplet.play'
+
+play {
+    track = "alpha"
+    serviceAccountEmail = app.playEmail
+    serviceAccountCredentials = app.playCredentials != "" ? file(app.playCredentials) : file("/dev/null")
+}
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -12,7 +22,7 @@ android {
     buildToolsVersion "28.0.3"
 
     defaultConfig {
-        applicationId "com.android.inputmethod.latin"
+        applicationId app.packageName
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -20,29 +30,30 @@ android {
         versionName app.versionName
     }
 
-    signingConfigs {
-        release {
-            storeFile rootProject.file(app.storeFile)
-            keyAlias app.keyAlias
-            storePassword storePw
-            keyPassword keyPw
+    if (app.storeFile != "") {
+        signingConfigs {
+            release {
+                storeFile rootProject.file(app.storeFile)
+                keyAlias app.keyAlias
+                storePassword app.storePassword
+                keyPassword app.keyPassword
+            }
+        }
+
+        buildTypes {
+            release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+                signingConfig signingConfigs.release
+            }
         }
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            signingConfig signingConfigs.release
-        }
-    }
-
-    aaptOptions.additionalParameters("--rename-manifest-package", app.packageName)
 
     lintOptions {
         checkReleaseBuilds false
     }
 }
+
 
 dependencies {
     implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
@@ -65,6 +76,7 @@ dependencies {
     // Android Kotlin Extensions
     implementation "androidx.core:core-ktx:$ktxVersion"
 }
+
 repositories {
     mavenCentral()
 }
