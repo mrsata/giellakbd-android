@@ -86,8 +86,6 @@ import java.util.concurrent.TimeUnit
 class LatinIME : InputMethodService(), KeyboardActionListener, SuggestionStripView.Listener, SuggestionStripViewAccessor, DictionaryFacilitator.DictionaryInitializationListener, PermissionsManager.PermissionsResultCallback {
 
     internal val mSettings: Settings
-    // TODO(bbqsrc): make this not null later.
-    private val mDictionaryFacilitator: DictionaryFacilitator = DivvunDictionaryFacilitator()
     internal val mInputLogic = InputLogic(this /* LatinIME */,
             this /* SuggestionStripViewAccessor */, mDictionaryFacilitator)
     // We expect to have only one decoder in almost all cases, hence the default capacity of 1.
@@ -116,6 +114,7 @@ class LatinIME : InputMethodService(), KeyboardActionListener, SuggestionStripVi
     private val mIsHardwareAcceleratedDrawingEnabled: Boolean
 
     private var mGestureConsumer = GestureConsumer.NULL_GESTURE_CONSUMER
+    private lateinit var mDictionaryFacilitator: DictionaryFacilitator
 
     val mHandler = UIHandler(this)
 
@@ -505,6 +504,7 @@ class LatinIME : InputMethodService(), KeyboardActionListener, SuggestionStripVi
         DebugFlags.init(PreferenceManager.getDefaultSharedPreferences(this))
         RichInputMethodManager.init(this)
         mRichImm = RichInputMethodManager.getInstance()
+        mDictionaryFacilitator = DivvunDictionaryFacilitator(this.mRichImm!!.currentSubtypeLocale)
         KeyboardSwitcher.init(this)
         AudioAndHapticFeedbackManager.init(this)
         AccessibilityUtils.init(this)
@@ -544,7 +544,7 @@ class LatinIME : InputMethodService(), KeyboardActionListener, SuggestionStripVi
         // This method is called on startup and language switch, before the new layout has
         // been displayed. Opening dictionaries never affects responsivity as dictionaries are
         // asynchronously loaded.
-        if (!mHandler.hasPendingReopenDictionaries()) {
+        if (!mHandler.hasPendingReopenDictionaries() && locale != null) {
             resetDictionaryFacilitator(locale)
         }
         resetDictionaryFacilitatorIfNecessary()
@@ -574,10 +574,8 @@ class LatinIME : InputMethodService(), KeyboardActionListener, SuggestionStripVi
         } else {
             subtypeLocale = subtypeSwitcherLocale
         }
-        if (mDictionaryFacilitator != null) {
-            if (mDictionaryFacilitator.isForLocale(subtypeLocale) && mDictionaryFacilitator.isForAccount(mSettings.current.mAccount)) {
-                return
-            }
+        if (mDictionaryFacilitator.isForLocale(subtypeLocale) && mDictionaryFacilitator.isForAccount(mSettings.current.mAccount)) {
+            return
         }
         resetDictionaryFacilitator(subtypeLocale)
     }
@@ -589,13 +587,14 @@ class LatinIME : InputMethodService(), KeyboardActionListener, SuggestionStripVi
      * @param locale the locale
      */
     // TODO: make sure the current settings always have the right locales, and read from them.
-    private fun resetDictionaryFacilitator(locale: Locale?) {
+    private fun resetDictionaryFacilitator(locale: Locale) {
         val settingsValues = mSettings.current
-        mDictionaryFacilitator?.resetDictionaries(this /* context */, locale,
-                settingsValues.mUseContactsDict, false, // settingsValues.mUsePersonalizedDicts,
-                false /* forceReloadMainDictionary */,
-                settingsValues.mAccount, "" /* dictNamePrefix */,
-                this /* DictionaryInitializationListener */)
+        mDictionaryFacilitator = DivvunDictionaryFacilitator(locale)
+//        mDictionaryFacilitator?.resetDictionaries(this /* context */, locale,
+//                settingsValues.mUseContactsDict, false, // settingsValues.mUsePersonalizedDicts,
+//                false /* forceReloadMainDictionary */,
+//                settingsValues.mAccount, "" /* dictNamePrefix */,
+//                this /* DictionaryInitializationListener */)
         if (settingsValues.mAutoCorrectionEnabledPerUserSettings) {
             mInputLogic.mSuggest.setAutoCorrectionThreshold(
                     settingsValues.mAutoCorrectionThreshold)

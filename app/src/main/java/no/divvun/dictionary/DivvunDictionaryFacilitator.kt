@@ -15,11 +15,11 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class DivvunDictionaryFacilitator : DictionaryFacilitator {
+class DivvunDictionaryFacilitator(locale: Locale) : DictionaryFacilitator {
     private val tag = createTag(this)
     private var isActive = false
 
-    val dictionary = DivvunDictionary()
+    val dictionary = DivvunDictionary(locale)
 
     // STUB
     override fun setValidSpellingWordReadCache(cache: LruCache<String, Boolean>) {
