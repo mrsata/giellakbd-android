@@ -24,26 +24,37 @@ android {
 
         versionCode app.versionCode
         versionName app.versionName
-    }
 
-    if (app.storeFile != "") {
-        signingConfigs {
-            release {
-                storeFile app.storeFile != "" ? rootProject.file(app.storeFile) : null
-                keyAlias app.keyAlias
-                storePassword app.storePassword
-                keyPassword app.keyPassword
-            }
-        }
-
-        buildTypes {
-            release {
-                minifyEnabled false
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-                signingConfig signingConfigs.release
-            }
+        // TFLite AAR config
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
     }
+
+    // Do not Compress TFLite model
+    aaptOptions {
+        noCompress "tflite"
+        noCompress "lite"
+    }
+
+//    if (app.storeFile != "") {
+//        signingConfigs {
+//            release {
+//                storeFile app.storeFile != "" ? rootProject.file(app.storeFile) : null
+//                keyAlias app.keyAlias
+//                storePassword app.storePassword
+//                keyPassword app.keyPassword
+//            }
+//        }
+//
+//        buildTypes {
+//            release {
+//                minifyEnabled false
+//                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+//                signingConfig signingConfigs.release
+//            }
+//        }
+//    }
 
     lintOptions {
         checkReleaseBuilds false
@@ -67,8 +78,14 @@ dependencies {
 
     // Android Kotlin Extensions
     implementation "androidx.core:core-ktx:$ktxVersion"
+
+    // TensorFlow Lite
+    implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly'
 }
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://google.bintray.com/tensorflow'
+    }
 }
