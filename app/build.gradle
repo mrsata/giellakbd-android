@@ -25,10 +25,10 @@ android {
         versionCode app.versionCode
         versionName app.versionName
 
-        // TFLite AAR config
-        ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a'
-        }
+        // TFLite AAR config: abiFilters to reduce size of binary
+        // ndk {
+        //     abiFilters 'armeabi-v7a', 'arm64-v8a'
+        // }
     }
 
     // Do not Compress TFLite model
