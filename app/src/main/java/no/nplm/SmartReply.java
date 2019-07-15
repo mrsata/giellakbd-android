@@ -26,6 +26,7 @@ public class SmartReply {
 
     public SmartReply(Context context) {
         try {
+            Log.d(TAG, "Prepare to load model with context: " + context.toString());
             this.context = context;
             this.model = loadModelFile();
             this.interpreter = new Interpreter(this.model);

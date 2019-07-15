@@ -11,6 +11,7 @@ import java.util.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
+import no.nplm.SmartReply
 
 //@SuppressLint("StaticFieldLeak")
 object DivvunUtils {
@@ -67,6 +68,7 @@ object DivvunUtils {
 
         // We do not trust Java to provide us this non-null.
         if (locale == null || !hasDictInAssets(context, locale)) {
+            Log.d(TAG, "getSpeller() returned null")
             return null
         }
 
@@ -80,6 +82,7 @@ object DivvunUtils {
         return try {
             DivvunSpell("${context.filesDir.absolutePath}/${cachedDictFileName(locale)}")
         } catch (ex: Exception) {
+            Log.d(TAG, "getSpeller() failed")
             Sentry.capture(ex)
             null
         }
