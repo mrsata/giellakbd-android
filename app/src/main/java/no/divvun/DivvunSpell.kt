@@ -2,11 +2,12 @@ package no.divvun
 
 import com.sun.jna.*
 import com.sun.jna.ptr.ByteByReference
+import no.nplm.Spell
 import java.lang.IndexOutOfBoundsException
 
 class SpellerInitException(val errorCode: Byte, message: String?): Exception(message)
 
-class DivvunSpell @Throws(SpellerInitException::class) constructor(path: String) {
+class DivvunSpell @Throws(SpellerInitException::class) constructor(path: String):Spell() {
     private val handle: Pointer
 
     init {
@@ -25,11 +26,11 @@ class DivvunSpell @Throws(SpellerInitException::class) constructor(path: String)
         get() = CLibrary.INSTANCE.speller_meta_get_locale(handle)
 
 
-    fun suggest(word: String, nBest: Long? = null, maxWeight: Float? = null, beam: Float? = null): List<String> {
-        return SuggestionList(handle, word, NativeLong(nBest ?: 0), maxWeight ?: 0.0f, beam ?: 0.0f)
+    override fun suggest(word: String, nBest: Long, maxWeight: Float, beam: Float): List<String> {
+        return SuggestionList(handle, word, NativeLong(nBest), maxWeight, beam)
     }
 
-    fun isCorrect(word: String): Boolean {
+    override fun isCorrect(word: String): Boolean {
         return CLibrary.INSTANCE.speller_is_correct(handle, word)
     }
 

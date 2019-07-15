@@ -12,10 +12,11 @@ import com.android.inputmethod.latin.SuggestedWords.SuggestedWordInfo
 import no.divvun.DivvunSpell
 import no.divvun.DivvunUtils
 import no.divvun.createTag
+import no.nplm.Spell
 import kotlin.collections.ArrayList
 
 class DivvunDictionary(private val context: Context?, locale: Locale?): Dictionary(Dictionary.TYPE_MAIN, locale) {
-    private val speller: DivvunSpell? by lazy { context?.let { DivvunUtils.getSpeller(it, mLocale) } }
+    private val speller: Spell? by lazy { context?.let { DivvunUtils.getSpeller(it, mLocale) } }
 
     override fun getSuggestions(composedData: ComposedData, ngramContext: NgramContext, proximityInfoHandle: Long, settingsValuesForSuggestion: SettingsValuesForSuggestion, sessionId: Int, weightForLocale: Float, inOutWeightOfLangModelVsSpatialModel: FloatArray): ArrayList<SuggestedWords.SuggestedWordInfo> {
         val speller = this.speller ?: return ArrayList()

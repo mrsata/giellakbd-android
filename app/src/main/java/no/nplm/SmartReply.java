@@ -5,6 +5,7 @@ import android.content.res.AssetFileDescriptor;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
 import org.tensorflow.lite.Interpreter;
 
 import java.io.FileInputStream;
@@ -14,8 +15,10 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 
+import java.util.*;
 
-public class SmartReply {
+
+public class SmartReply extends Spell{
 
     private static final String TAG = "SmartReply";
     private static final String MODEL_PATH = "smartreply.tflite";
@@ -24,7 +27,7 @@ public class SmartReply {
     private MappedByteBuffer model;
     private Interpreter interpreter;
 
-    public SmartReply(Context context) {
+    public SmartReply(@NotNull Context context) {
         try {
             Log.d(TAG, "Prepare to load model with context: " + context.toString());
             this.context = context;
@@ -36,7 +39,9 @@ public class SmartReply {
         }
     }
 
-    public String[] suggest(String word) {
+    @NotNull
+    @Override
+    public List<String> suggest(@NotNull String word, long nBest, float maxWeight, float beam) {
         String[] placeholderArray = {"placeholder", "is", "wise"};
         String placeholder = TextUtils.join(",", placeholderArray);
         ByteBuffer output = Charset.forName("UTF-8").encode(placeholder);
@@ -44,7 +49,13 @@ public class SmartReply {
         this.interpreter.run(input, output);
         String suggestion = Charset.forName("UTF-8").decode(output).toString();
         String[] suggestionArray = TextUtils.split(suggestion, ",");
-        return suggestionArray;
+        List<String> suggestionList = Arrays.asList(suggestionArray);
+        return suggestionList;
+    }
+
+    @Override
+    public boolean isCorrect(@NotNull String word) {
+        return false;
     }
 
     private MappedByteBuffer loadModelFile() throws IOException {
