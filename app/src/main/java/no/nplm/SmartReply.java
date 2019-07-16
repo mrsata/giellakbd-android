@@ -21,7 +21,7 @@ import java.util.*;
 public class SmartReply extends Spell{
 
     private static final String TAG = "SmartReply";
-    private static final String MODEL_PATH = "smartreply.tflite";
+    private static final String MODEL_PATH = "converted_model.tflite";
 
     private Context context;
     private MappedByteBuffer model;
