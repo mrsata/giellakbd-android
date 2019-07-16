@@ -33,6 +33,7 @@ public class SmartReply extends Spell{
             this.context = context;
             this.model = loadModelFile();
             this.interpreter = new Interpreter(this.model);
+            Log.d(TAG, "Model loaded");
         } catch (IOException e) {
             Log.e(TAG, "Fail to load model", e);
             return;
@@ -48,6 +49,7 @@ public class SmartReply extends Spell{
         ByteBuffer input = Charset.forName("UTF-8").encode(word);
         this.interpreter.run(input, output);
         String suggestion = Charset.forName("UTF-8").decode(output).toString();
+        Log.d(TAG, "suggestions are: " + suggestion);
         String[] suggestionArray = TextUtils.split(suggestion, ",");
         List<String> suggestionList = Arrays.asList(suggestionArray);
         return suggestionList;
