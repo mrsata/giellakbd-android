@@ -32,9 +32,10 @@ public class SmartReply extends Spell{
             Log.d(TAG, "Prepare to load model with context: " + context.toString());
             this.context = context;
             this.model = loadModelFile();
-            this.interpreter = new Interpreter(this.model);
             Log.d(TAG, "Model loaded");
-        } catch (IOException e) {
+            this.interpreter = new Interpreter(this.model);
+            Log.d(TAG, "Interpreter initiated");
+        } catch (Exception e) {
             Log.e(TAG, "Fail to load model", e);
             return;
         }
