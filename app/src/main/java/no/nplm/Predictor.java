@@ -31,9 +31,9 @@ public class Predictor extends Spell{
     private Context context;
     private MappedByteBuffer model;
     protected Interpreter interpreter;
-    protected byte[][] input = null;
+    protected int[][] input = null;
     protected List<String> labelList = null;
-    private byte[][][] labelProbArray = null;
+    private float[][][] labelProbArray = null;
 
     public Predictor(@NotNull Context context) {
         try {
@@ -44,9 +44,9 @@ public class Predictor extends Spell{
             interpreter = new Interpreter(this.model);
             Log.d(TAG, "Interpreter initiated");
             // Allocate input and output
-            input = new byte[1][2];
+            input = new int[1][2];
             labelList = loadLabelList();
-            labelProbArray = new byte[1][2][labelList.size()];
+            labelProbArray = new float[1][2][labelList.size()];
             Log.d(TAG, "Model input and output allocated");
         } catch (Exception e) {
             Log.e(TAG, "Fail to load model", e);
@@ -59,9 +59,9 @@ public class Predictor extends Spell{
     public List<String> suggest(@NotNull String word, long nBest, float maxWeight, float beam) {
 
         // Prepare inputs
-        input[0][0] = (byte) 0;
+        input[0][0] = 0;
         if (isCorrect(word)){
-            input[0][1] = (byte) labelList.indexOf(word);
+            input[0][1] = labelList.indexOf(word);
         }
 
         // Begin inference
@@ -77,7 +77,7 @@ public class Predictor extends Spell{
         for (int i =0; i< 10000;i++){
             for(int j =0;j<MAX_RESULTS;j++){
                 if (candidateIndex[j] < labelProbArray[0][j][i]) {
-                    candidateIndex[j] = labelProbArray[0][j][i];
+                    candidateIndex[j] = i;
                     break;
                 }
             }
