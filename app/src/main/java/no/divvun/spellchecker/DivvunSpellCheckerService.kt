@@ -9,7 +9,7 @@ import android.view.textservice.TextInfo
 import no.divvun.DivvunSpell
 import no.divvun.DivvunUtils
 import no.divvun.createTag
-import no.nplm.SmartReply
+import no.nplm.Predictor
 import no.nplm.Spell
 import java.util.*
 

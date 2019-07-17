@@ -7,11 +7,11 @@ import com.android.inputmethod.latin.BuildConfig
 import io.sentry.Sentry
 import io.sentry.event.Event
 import io.sentry.event.EventBuilder
+import no.nplm.Predictor
 import java.util.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import no.nplm.SmartReply
 import no.nplm.Spell
 
 //@SuppressLint("StaticFieldLeak")
@@ -71,7 +71,7 @@ object DivvunUtils {
         if (locale == null || !hasDictInAssets(context, locale)) {
 
             return try {
-                SmartReply(context)
+                Predictor(context)
             } catch (ex: Exception) {
                 Sentry.capture(ex)
                 return null
